@@ -1,7 +1,7 @@
 const calculatorScreen = document.querySelector('#screen');
 let currentInput = '';
 let currentOperation = '';
-let lastResult = ''; // to store the last result
+let lastResult = '';
 
 function updateScreen() {
     calculatorScreen.innerHTML = currentInput || lastResult || ' ';
@@ -46,8 +46,8 @@ function handleEquals() {
         currentOperation = '';
         currentInput = '';
         console.log(`Result: ${result}`);
-    } catch(error) {
-        lastResult = '' ;
+    } catch (error) {
+        lastResult = '';
         currentOperation = '';
         currentInput = '';
         updateScreen()
