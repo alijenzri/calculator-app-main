@@ -39,17 +39,27 @@ function handleEquals() {
     if (currentInput !== '') {
         currentOperation += currentInput;
     }
-
-    const result = eval(currentOperation);
-    calculatorScreen.textContent = result;
-    lastResult = '' + result;
-    currentOperation = '';
-    currentInput = '';
-    console.log(`Result: ${result}`);
+    try {
+        const result = eval(currentOperation);
+        calculatorScreen.textContent = result;
+        lastResult = '' + result;
+        currentOperation = '';
+        currentInput = '';
+        console.log(`Result: ${result}`);
+    } catch(error) {
+        lastResult = '' ;
+        currentOperation = '';
+        currentInput = '';
+        updateScreen()
+    }
 }
 
 function handleDelete() {
-    currentInput = currentInput.slice(0, -1);
+    if (currentInput == '' && lastResult != '') {
+        lastResult = lastResult.slice(0, -1);
+    } else {
+        currentInput = currentInput.slice(0, -1);
+    }
     updateScreen();
 }
 
