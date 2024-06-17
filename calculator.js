@@ -1,38 +1,51 @@
 const calculatorScreen = document.querySelector('#screen');
 let currentInput = '';
 let currentOperation = '';
-
+let lastResult = ''; // to store the last result
 
 function updateScreen() {
-    calculatorScreen.innerHTML = currentInput || '0';
+    calculatorScreen.innerHTML = currentInput || lastResult || ' ';
 }
 
 function handleOperand(operand) {
+    if (lastResult !== '' && currentInput === '') {
+        lastResult = '';
+    }
     currentInput += operand;
     updateScreen();
 }
 
 function handleOperator(operator) {
-    currentOperation = currentOperation+ ' ' + currentInput + ' ' + operator;
+    if (currentInput === '' && lastResult === '') {
+        return;
+    }
+
+    if (currentInput !== '') {
+        currentOperation += currentInput + ' ' + operator;
+    } else {
+        currentOperation = lastResult + ' ' + operator;
+    }
     currentInput = '';
+    lastResult = '';
+    console.log(`Current Operation: ${currentOperation}`);
     updateScreen();
 }
 
-function handleEquals() {   
+function handleEquals() {
+    if (currentInput === '' && currentOperation === '') {
+        return;
+    }
+
     if (currentInput !== '') {
         currentOperation += currentInput;
-        try {
-            const result = eval(currentOperation);
-            calculatorScreen.textContent = result;
-        } catch (error) {
-            console.log('Invalid Equation')
-            calculatorScreen.textContent = 'Invalid Equation';
-        }
     }
-    
-    currentInput = '';
-    currentOperation = '';
 
+    const result = eval(currentOperation);
+    calculatorScreen.textContent = result;
+    lastResult = '' + result;
+    currentOperation = '';
+    currentInput = '';
+    console.log(`Result: ${result}`);
 }
 
 function handleDelete() {
@@ -43,6 +56,7 @@ function handleDelete() {
 function handleClear() {
     currentInput = '';
     currentOperation = '';
+    lastResult = '';
     updateScreen();
 }
 
@@ -52,7 +66,6 @@ document.querySelectorAll('button').forEach(button => {
             handleOperand(button.getAttribute('data-operand'));
         } else if (button.hasAttribute('data-operator')) {
             handleOperator(button.getAttribute('data-operator'));
-            console.log(`${currentOperation}`);
         } else if (button.hasAttribute('data-equals')) {
             handleEquals();
         } else if (button.hasAttribute('data-delete')) {
